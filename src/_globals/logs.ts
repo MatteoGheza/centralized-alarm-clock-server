@@ -1,0 +1,1 @@
+export const Logs = []; //Used for loading logs in UI

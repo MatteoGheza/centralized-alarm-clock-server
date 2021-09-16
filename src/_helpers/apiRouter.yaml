@@ -1,0 +1,27 @@
+definitions:
+  Version:
+    type: object
+    properties:
+      version:
+        type: string
+        example: "1.0.0"
+  Logs:
+    type: object
+    properties:
+      logs:
+        type: array
+        items:
+          type: object
+          properties:
+            datetime:
+              type: string
+              format: date-time
+            log:
+              type: string
+              example: "centralized-alarm-clock server running on port 8899"
+            type:
+              type: string
+              example: info
+  Ping:
+    type: string
+    example: "pong"
