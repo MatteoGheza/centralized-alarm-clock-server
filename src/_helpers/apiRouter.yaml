@@ -1,4 +1,46 @@
 definitions:
+  Users:
+    type: object
+    properties:
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            username:
+              type: string
+            name:
+              type: string
+            isHidden:
+              type: boolean
+  UserAddRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+  UserAdd:
+    type: object
+    properties:
+      status:
+        type: string
+        example: "ok"
+      user:
+        type: object
+        properties:
+          id:
+            type: integer
+          username:
+            type: string
+          name:
+            type: string
+          isHidden:
+            type: boolean
   Version:
     type: object
     properties:

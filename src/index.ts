@@ -10,6 +10,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import { logger } from './_helpers/logger'; 
 import { apiRouter } from './_helpers/apiRouter';
+import { initializeDB } from './_helpers/db';
 
 //Rate limiter configurations
 const maxPageRequestPerMinute = 100;
@@ -29,7 +30,7 @@ const listenPort: number = parseInt(process.env.PORT) || 8899;
 const app = express();
 const httpServer = new http.Server(app);
 const openAPIDefinition = {
-    swagger: "2.0.0",
+    openapi: "3.0.3",
     info: {
         title: "centralized-alarm-clock",
         version: "1.0.0",
@@ -38,7 +39,12 @@ const openAPIDefinition = {
             url: 'https://spdx.org/licenses/MIT.html',
         }, 
     },
-    basePath: '/api/v1/'
+    servers: [
+        {
+          "url": '/api/v1/',
+          "description": "API server"
+        }
+    ]
 }
 
 const spec = jsdocParser({
@@ -73,6 +79,7 @@ function initializeServer() {
 
 function startUp() {
 	initializeServer();
+    initializeDB();
 
 	process.on('uncaughtException', (err: Error) => {
 		if (!process.versions.hasOwnProperty('electron')) {
