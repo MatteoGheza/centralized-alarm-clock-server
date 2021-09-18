@@ -5,7 +5,7 @@ import { RateLimiterMemory } from 'rate-limiter-flexible';
 import http from 'http';
 import socketio from 'socket.io';
 
-import jsdocParser from 'jsdoc-openapi';
+import openapi from 'openapi-comment-parser';
 import swaggerUi from 'swagger-ui-express';
 
 import { logger } from './_helpers/logger'; 
@@ -29,28 +29,12 @@ if (!fs.existsSync(uiDistPath)) {
 const listenPort: number = parseInt(process.env.PORT) || 8899;
 const app = express();
 const httpServer = new http.Server(app);
-const openAPIDefinition = {
-    openapi: "3.0.3",
-    info: {
-        title: "centralized-alarm-clock",
-        version: "1.0.0",
-        license: {
-            name: 'Licensed Under MIT',
-            url: 'https://spdx.org/licenses/MIT.html',
-        }, 
-    },
-    servers: [
-        {
-          "url": '/api/v1/',
-          "description": "API server"
-        }
-    ]
-}
 
-const spec = jsdocParser({
-    swaggerDefinition: openAPIDefinition,
-    apis: ["src/_helpers/api*.*"]
+const spec = openapi({
+    verbose: false
 });
+
+console.log(JSON.stringify(spec));
 
 const io = new socketio.Server(httpServer, { allowEIO3: true });
 

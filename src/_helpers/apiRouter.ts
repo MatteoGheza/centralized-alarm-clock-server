@@ -12,7 +12,9 @@ apiRouter.use(express.urlencoded({ extended: false }));
 /**
  * GET /users
  * @description Get users list.
- * @response {Users} 200 - List of user objects.
+ * @response 200 - List of user objects.
+ * @responseContent {User} 200.application/json
+ * @tag users
  */
 apiRouter.get('/users', function(req, res) {
     let userRepository = connection.getRepository(User);
@@ -27,8 +29,12 @@ apiRouter.get('/users', function(req, res) {
 /**
  * POST /users
  * @description Create a new user.
- * @requestBody {UserAddRequest} user - Only a few user params.
- * @response {UserAdd} 200 - Add user response.
+ * @response 200 - Add user response.
+ * @responseContent {UserAdd} 200.application/json
+ * @bodyContent {UserAddRequest} application/x-www-form-urlencoded
+ * @bodyContent {UserAddRequest} application/json
+ * @bodyRequired
+ * @tag users
  */
 apiRouter.post('/users',
     body('username').isLength({ min: 5 }),
@@ -57,7 +63,8 @@ function(req, res) {
 /**
  * GET /version
  * @description Get server version.
- * @response {Version} 200 - Version object.
+ * @response 200 - Version object.
+ * @responseContent {Version} 200.application/json
  */
 apiRouter.get('/version', function(req, res) {
     res.send({
@@ -68,7 +75,8 @@ apiRouter.get('/version', function(req, res) {
 /**
  * GET /logs
  * @description Get a list of logs.
- * @response {Logs} 200 - Logs object.
+ * @response 200 - Logs object.
+ * @responseContent {Logs} 200.application/json
  */
 apiRouter.get('/logs', function(req, res) {
     res.json({
@@ -79,9 +87,10 @@ apiRouter.get('/logs', function(req, res) {
 /**
  * GET /ping
  * @description Reply with "pong".
- * @response {Ping} 200 - pong #text/plain#.
+ * @response 200 - pong.
+ * @responseContent {Pong} 200.text/plain
  */
 apiRouter.get('/ping', function(req, res) {
-    res.set('content-type', 'text/plain');
+    res.type('text/plain');
     res.send('pong');
 });

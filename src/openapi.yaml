@@ -1,0 +1,90 @@
+openapi: 3.0.0
+
+info:
+  title: "centralized-alarm-clock"
+  version: "1.0.0"
+  license:
+    name: 'Licensed Under MIT'
+    url: 'https://spdx.org/licenses/MIT.html'
+   
+servers: 
+  - url: '/api/v1/'
+    description: "API server"
+
+tags:
+  - name: "users"
+    description: "Operations to other users"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              username:
+                type: string
+              name:
+                type: string
+              isHidden:
+                type: boolean
+    UserAddRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    UserAdd:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "ok"
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+            username:
+              type: string
+            name:
+              type: string
+            isHidden:
+              type: boolean
+    Version:
+      type: object
+      properties:
+        version:
+          type: string
+          example: "1.0.0"
+    Logs:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            type: object
+            properties:
+              datetime:
+                type: string
+                format: date-time
+              log:
+                type: string
+                example: "centralized-alarm-clock server running on port 8899"
+              type:
+                type: string
+                example: info
+    Pong:
+      type: string
+      example: "pong"
