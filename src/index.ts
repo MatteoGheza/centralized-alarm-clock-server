@@ -34,8 +34,6 @@ const spec = openapi({
     verbose: false
 });
 
-console.log(JSON.stringify(spec));
-
 const io = new socketio.Server(httpServer, { allowEIO3: true });
 
 function initializeServer() {
