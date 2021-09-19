@@ -64,7 +64,7 @@ export function authenticate(username: string, password: string): Promise<Authen
 
 export function validateAccessToken(access_token: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-        jwt.verify(access_token, process.env.JWT_PUBLIC_KEY, (err, decoded) => {
+        jwt.verify(access_token, process.env.JWT_PRIVATE_KEY, (err, decoded) => {
             if(err) {
                 reject(err);
             }

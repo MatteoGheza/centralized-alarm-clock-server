@@ -4,7 +4,7 @@ import { Logs } from '../_globals/logs';
 import { version } from './version';
 import { connection } from './db';
 import { User } from '../entity/User';
-import { addUser, authenticate } from '../_helpers/auth';
+import { addUser, authenticate, validateAccessToken } from '../_helpers/auth';
 import { AddUserSettings } from '../_models/AddUserSettings';
 
 export var apiRouter = express.Router();
@@ -31,8 +31,9 @@ apiRouter.get('/users', function(req, res) {
 /**
  * POST /users
  * @description Create a new user.
- * @response 200 - Add user response.
+ * @response 400 - Api request malformed.
  * @responseContent {ValidationError} 400.application/json
+ * @response 200 - Add user response.
  * @responseContent {UserAdd} 200.application/json
  * @bodyContent {UserAddRequest} application/x-www-form-urlencoded
  * @bodyContent {UserAddRequest} application/json
@@ -67,10 +68,12 @@ function(req, res) {
 /**
  * POST /login
  * @description Create a new user.
- * @response 200 - Add user response.
+ * @response 400 - Api request malformed.
  * @responseContent {ValidationError} 400.application/json
- * @responseContent {AuthResponse} 200.application/json
+ * @response 401 - Auth error.
  * @responseContent {AuthErrorResponse} 401.application/json
+ * @response 200 - Add user response.
+ * @responseContent {AuthResponse} 200.application/json
  * @bodyContent {LoginRequest} application/x-www-form-urlencoded
  * @bodyContent {LoginRequest} application/json
  * @bodyRequired
@@ -89,6 +92,33 @@ function(req, res) {
         res.json({
             access_token: response.access_token,
             user: response.user
+        });
+    }).catch((err) => {
+        res.status(401).json({
+            status: 'error',
+            message: err.message
+        });
+    });
+});
+
+/**
+ * POST /validate_token
+ * @description Validate JWT Access Token.
+ * @response 400 - Api request malformed.
+ * @response 401 - Auth error.
+ * @response 200 - Add user response.
+ * @responseContent {ValidationError} 400.application/json
+ */
+apiRouter.post('/validate_token', body('access_token').isLength({ min: 5 }), function(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    validateAccessToken(req.body.access_token).then((response) => {
+        res.json({
+            status: "ok",
+            user: response
         });
     }).catch((err) => {
         res.status(401).json({
