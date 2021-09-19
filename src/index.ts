@@ -5,6 +5,9 @@ import { RateLimiterMemory } from 'rate-limiter-flexible';
 import http from 'http';
 import socketio from 'socket.io';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import openapi from 'openapi-comment-parser';
 import swaggerUi from 'swagger-ui-express';
 

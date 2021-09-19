@@ -88,8 +88,7 @@ function(req, res) {
         delete response.user["password"];
         res.json({
             access_token: response.access_token,
-            user: response.user,
-            scope: response.scope
+            user: response.user
         });
     }).catch((err) => {
         res.status(401).json({

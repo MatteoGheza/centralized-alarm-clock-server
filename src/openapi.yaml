@@ -102,9 +102,6 @@ components:
               type: string
             isHidden:
               type: boolean
-        scope:
-          type: string
-          example: "users:read;users:write"
     AuthErrorResponse:
       type: object
       properties:

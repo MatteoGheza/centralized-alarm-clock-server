@@ -1,6 +1,7 @@
 import { connection } from './db';
 import { User } from '../entity/User';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { AddUserSettings } from '../_models/AddUserSettings';
 import { AuthenticateSuccessResponse } from '../_models/AuthenticateSuccessResponse';
 
@@ -47,13 +48,27 @@ export function authenticate(username: string, password: string): Promise<Authen
             if(!comparePassword(password, user.password)) {
                 reject(new Error('Password is incorrect'));
             }
-            resolve({
-                access_token: '',
-                user: user,
-                scope: ''
+            delete user['password'];
+            jwt.sign({user}, process.env.JWT_PRIVATE_KEY, { expiresIn: '2h' },(err, token) => {
+                if(err) { reject(err) }
+                resolve({
+                    access_token: token,
+                    user: user
+                });
             });
         }).catch((e) => {
             reject(e);
+        });
+    });
+}
+
+export function validateAccessToken(access_token: string): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
+        jwt.verify(access_token, process.env.JWT_PUBLIC_KEY, (err, decoded) => {
+            if(err) {
+                reject(err);
+            }
+            resolve(decoded.user);
         });
     });
 }
